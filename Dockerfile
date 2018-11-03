@@ -1,4 +1,4 @@
-FROM centos:systemd
+FROM centos/systemd
 LABEL maintainer="imjoseangel"
 
 ARG username=ansible
