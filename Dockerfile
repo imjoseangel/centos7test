@@ -7,8 +7,9 @@ ARG publickey="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDj6pQjakenUVocXKC3ei7FYTSgB
 
 
 RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/UTC /etc/localtime
+RUN yum upgrade -y
 RUN yum clean all
-RUN yum install -y openssh-server openssh-clients which curl htop
+RUN yum install -y openssh-server openssh-clients which curl htop sudo
 RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
 RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
 RUN mkdir -p /var/run/sshd
@@ -24,7 +25,8 @@ RUN touch /home/${username}/.ssh/authorized_keys
 RUN chown ${username} /home/${username}/.ssh/authorized_keys
 RUN chmod 0600 /home/${username}/.ssh/authorized_keys
 RUN echo $publickey >> /home/${username}/.ssh/authorized_keys
+RUN systemctl enable sshd.service
 
 EXPOSE 22
 
-CMD ["/usr/sbin/sshd", "-D"]
+CMD ["/usr/sbin/init"]
